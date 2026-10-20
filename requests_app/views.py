@@ -1,13 +1,15 @@
 
-from django.shortcuts import render, redirect
-from .forms import CitizenRegistrationForm
+"""Views for citizen registration and service-request management."""
+
 from django.contrib.auth.decorators import login_required
-from .forms import ServiceRequestForm
+from django.shortcuts import redirect, render
+
+from .forms import CitizenRegistrationForm, ServiceRequestForm
 from .models import ServiceRequest
 
 
-
 def home(request):
+    """Display public statistics about submitted service requests."""
     total_requests = ServiceRequest.objects.count()
     open_requests = ServiceRequest.objects.exclude(
         status=ServiceRequest.Status.RESOLVED
@@ -26,7 +28,9 @@ def home(request):
         },
     )
 
+
 def register(request):
+    """Register a citizen and redirect successful registrations to login."""
     if request.method == "POST":
         form = CitizenRegistrationForm(request.POST)
 
@@ -34,6 +38,7 @@ def register(request):
             form.save()
             return redirect("login")
     else:
+        # Show an empty registration form for a new visitor.
         form = CitizenRegistrationForm()
 
     return render(
@@ -42,15 +47,17 @@ def register(request):
         {"form": form},
     )
 
+
 @login_required
 def submit_request(request):
+    """Allow authenticated citizens to submit service requests."""
     if request.method == "POST":
-        form = ServiceRequestForm(
-            request.POST,
-            request.FILES,
-        )
+        # Include uploaded files so the optional image is processed.
+        form = ServiceRequestForm(request.POST, request.FILES)
 
         if form.is_valid():
+            # Associate the new request with the logged-in citizen rather
+            # than trusting a citizen ID supplied by the submitted form.
             service_request = form.save(commit=False)
             service_request.citizen = request.user
             service_request.save()
@@ -67,6 +74,7 @@ def submit_request(request):
 
 @login_required
 def my_requests(request):
+    """Show each authenticated citizen only their own requests."""
     service_requests = ServiceRequest.objects.filter(
         citizen=request.user
     )

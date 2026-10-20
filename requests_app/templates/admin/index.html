@@ -1,0 +1,352 @@
+
+{% extends "admin/base_site.html" %}
+{% load i18n static admin_filters log %}
+
+{% block title %}Administration Dashboard | Murang’a County{% endblock %}
+
+{% block bodyclass %}{{ block.super }} county-dashboard{% endblock %}
+
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+<style>
+    .county-dashboard #content {
+        max-width: 1500px;
+        margin: 0 auto;
+    }
+
+    .dashboard-welcome {
+        background: linear-gradient(120deg, #104b35, #176447);
+        color: #fff;
+        padding: 28px;
+        border-radius: 12px;
+        margin-bottom: 26px;
+        border-bottom: 4px solid #c79a35;
+    }
+
+    .dashboard-welcome h1 {
+        color: #fff !important;
+        font-size: 28px;
+        margin: 0 0 8px !important;
+    }
+
+    .dashboard-welcome p {
+        color: #e5efe9;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .dashboard-section-title {
+        color: #104b35;
+        font-size: 19px;
+        margin: 28px 0 16px;
+    }
+
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
+        background: #fff;
+        border: 1px solid #dce5df;
+        border-radius: 10px;
+        padding: 22px;
+        box-shadow: 0 3px 10px rgba(16, 75, 53, .05);
+        min-width: 0;
+    }
+
+    .stat-label {
+        color: #52645a;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .stat-number {
+        color: #25332c;
+        font-size: 34px;
+        font-weight: 750;
+        line-height: 1.2;
+        margin-bottom: 14px;
+    }
+
+    .stat-link {
+        font-size: 13px;
+        font-weight: 650;
+        text-decoration: none;
+    }
+
+    .stat-card.pending {
+        border-top: 4px solid #c79a35;
+    }
+
+    .stat-card.progress {
+        border-top: 4px solid #2563eb;
+    }
+
+    .stat-card.resolved {
+        border-top: 4px solid #16804a;
+    }
+
+    .stat-card.total {
+        border-top: 4px solid #176447;
+    }
+
+    .dashboard-columns {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+        gap: 22px;
+        align-items: start;
+    }
+
+    .dashboard-panel {
+        background: #fff;
+        border: 1px solid #dce5df;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 22px;
+        box-shadow: 0 3px 10px rgba(16, 75, 53, .04);
+    }
+
+    .dashboard-panel h2 {
+        margin: 0;
+        padding: 16px 20px;
+        background: #eaf1ec;
+        color: #104b35;
+        font-size: 16px;
+    }
+
+    .dashboard-panel-body {
+        padding: 20px;
+    }
+
+    .dashboard-app-list .module {
+        margin-bottom: 18px;
+    }
+
+    .dashboard-app-list table {
+        width: 100%;
+    }
+
+    .dashboard-app-list th,
+    .dashboard-app-list td {
+        padding: 12px;
+    }
+
+    .dashboard-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .dashboard-button {
+        display: inline-block;
+        background: #176447;
+        color: #fff !important;
+        padding: 11px 15px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 650;
+        font-size: 13px;
+    }
+
+    .dashboard-button.secondary {
+        background: #fff;
+        color: #176447 !important;
+        border: 1px solid #176447;
+    }
+
+    .dashboard-activity {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .dashboard-activity li {
+        padding: 13px 0;
+        border-bottom: 1px solid #edf1ee;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+    .dashboard-activity li:last-child {
+        border-bottom: none;
+    }
+
+    .dashboard-muted {
+        color: #52645a;
+        font-size: 13px;
+    }
+
+    @media (max-width: 1000px) {
+        .dashboard-stats {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .dashboard-columns {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 520px) {
+        .dashboard-welcome {
+            padding: 20px;
+        }
+
+        .dashboard-welcome h1 {
+            font-size: 23px;
+        }
+
+        .dashboard-stats {
+            gap: 10px;
+        }
+
+        .stat-card {
+            padding: 15px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+
+    <section class="dashboard-welcome">
+        <h1>Administration Dashboard</h1>
+        <p>
+            Welcome, {{ user.get_short_name|default:user.username }}.
+            Monitor citizen requests and coordinate service delivery
+            across Murang’a County.
+        </p>
+    </section>
+
+    <h2 class="dashboard-section-title">Service Request Overview</h2>
+
+    <section class="dashboard-stats" aria-label="Request statistics">
+
+        <article class="stat-card total">
+            <div class="stat-label">Total Requests</div>
+            <div class="stat-number">{{ dashboard_total|default:0 }}</div>
+            <a class="stat-link"
+               href="{% url 'admin:requests_app_servicerequest_changelist' %}">
+                View all requests &rarr;
+            </a>
+        </article>
+
+        <article class="stat-card pending">
+            <div class="stat-label">Pending</div>
+            <div class="stat-number">{{ dashboard_pending|default:0 }}</div>
+            <a class="stat-link"
+               href="{% url 'admin:requests_app_servicerequest_changelist' %}?status__exact=PENDING">
+                Review pending &rarr;
+            </a>
+        </article>
+
+        <article class="stat-card progress">
+            <div class="stat-label">In Progress</div>
+            <div class="stat-number">{{ dashboard_in_progress|default:0 }}</div>
+            <a class="stat-link"
+               href="{% url 'admin:requests_app_servicerequest_changelist' %}?status__exact=IN_PROGRESS">
+                Track ongoing work &rarr;
+            </a>
+        </article>
+
+        <article class="stat-card resolved">
+            <div class="stat-label">Resolved</div>
+            <div class="stat-number">{{ dashboard_resolved|default:0 }}</div>
+            <a class="stat-link"
+               href="{% url 'admin:requests_app_servicerequest_changelist' %}?status__exact=RESOLVED">
+                View completed work &rarr;
+            </a>
+        </article>
+
+    </section>
+
+    <div class="dashboard-columns">
+
+        <section class="dashboard-panel">
+            <h2>Administration &amp; Management</h2>
+            <div class="dashboard-panel-body">
+
+                <div class="dashboard-actions" style="margin-bottom:20px;">
+                    <a class="dashboard-button"
+                       href="{% url 'admin:requests_app_servicerequest_changelist' %}">
+                        Manage Service Requests
+                    </a>
+                    <a class="dashboard-button secondary"
+                       href="{% url 'admin:requests_app_servicerequest_add' %}">
+                        Create Request
+                    </a>
+                    <a class="dashboard-button secondary"
+                       href="{% url 'admin:auth_user_changelist' %}">
+                        Manage Users
+                    </a>
+                </div>
+
+                <div class="dashboard-app-list">
+                    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+                </div>
+
+            </div>
+        </section>
+
+        <section class="dashboard-panel">
+            <h2>Recent Administrative Activity</h2>
+            <div class="dashboard-panel-body">
+
+                {% get_admin_log 8 as admin_log for_user user %}
+
+                {% if admin_log %}
+                    <ul class="dashboard-activity">
+                        {% for entry in admin_log %}
+                            <li>
+                                {% if entry.is_addition %}
+                                    <strong>Added:</strong>
+                                {% elif entry.is_change %}
+                                    <strong>Updated:</strong>
+                                {% elif entry.is_deletion %}
+                                    <strong>Deleted:</strong>
+                                {% endif %}
+
+                                {% if not entry.is_deletion and entry.get_admin_url %}
+                                    <a href="{{ entry.get_admin_url }}">
+                                        {{ entry.object_repr|to_object_display_value }}
+                                    </a>
+                                {% else %}
+                                    {{ entry.object_repr|to_object_display_value }}
+                                {% endif %}
+
+                                <div class="dashboard-muted">
+                                    {% if entry.content_type %}
+                                        {{ entry.content_type.name|capfirst }}
+                                    {% else %}
+                                        Administrative record
+                                    {% endif %}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="dashboard-muted">
+                        No recent activity is available for your account.
+                    </p>
+                {% endif %}
+
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebar %}{% endblock %}

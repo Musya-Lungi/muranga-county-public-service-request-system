@@ -1,20 +1,17 @@
-
 # Murang'a County Public Service Request System
 
-A Django-based web application that enables citizens to report
-community service issues and track their resolution.
+A Django-based web application that enables citizens to report community service issues and track their progress towards resolution.
 
 ## Features
 
 - Citizen registration, login, and logout
-- Submit service requests with category, title, description,
-  location, and an optional image
-- Track personal requests and their statuses
+- Submit service requests with category, title, description, location, and an optional image
+- View personal service requests and their statuses
 - Unique reference numbers for service requests
-- Request status workflow: Pending, In Progress, Resolved
-- Staff request management through Django Admin
-- Homepage statistics for open and resolved requests
-- Resolution timestamps
+- Request status workflow: Pending → In Progress → Resolved
+- Administrative request management through Django Admin
+- Dashboard statistics for total, open, pending, in-progress, and resolved requests
+- Automatic resolution timestamps
 - Automated tests for core functionality and access control
 
 ## Technology Stack
@@ -23,48 +20,65 @@ community service issues and track their resolution.
 - Django
 - SQLite for local development
 - HTML and CSS
+- Pillow for image uploads
 
 ## Local Setup
 
-1. Install Python and create a virtual environment.
-2. Activate the virtual environment.
-3. Install dependencies:
+1. Install Python.
+2. Open a terminal in the project directory.
+3. Create and activate a virtual environment:
 
-   `pip install -r requirements.txt`
+   ```powershell
+   py -3.14 -m venv .venv
+   .venv\Scripts\Activate.ps1
+   ```
 
-4. Apply database migrations:
+4. Install the project dependencies:
 
-   `python manage.py migrate`
+   ```powershell
+   python -m pip install Django Pillow
+   ```
 
-5. Create an administrator account:
+5. Apply database migrations:
 
-   `python manage.py createsuperuser`
+   ```powershell
+   python manage.py migrate
+   ```
 
-6. Start the development server:
+6. Create an administrator account:
 
-   `python manage.py runserver`
+   ```powershell
+   python manage.py createsuperuser
+   ```
 
-7. Open `http://127.0.0.1:8000/` in your browser.
+7. Start the development server:
+
+   ```powershell
+   python manage.py runserver
+   ```
+
+8. Open http://127.0.0.1:8000/ in your browser.
 
 ## Administration
 
-Open `http://127.0.0.1:8000/admin/` and sign in with an
-administrator account to manage service requests.
+Open http://127.0.0.1:8000/admin/ and sign in with an administrator account to review requests, update statuses, search records, and filter requests by category or status.
 
 ## Testing
 
-Run the automated tests with:
+Run the automated test suite:
 
-`python manage.py test requests_app`
+```powershell
+python manage.py test
+```
 
-The current test suite covers registration, login, request
-submission, citizen privacy, status handling, and homepage analytics.
+The current test suite contains 13 tests covering core application functionality, including registration, authentication, request submission, access control, status handling, and homepage statistics.
 
-## Development Notes
+## Development and Deployment Notes
 
-This project currently uses SQLite and Django's development server.
-Production deployment requires appropriate production settings,
-secure secret management, a production database where appropriate,
-and suitable media storage.
+The project uses SQLite for local development. Production deployments should use secure environment-based settings, an appropriately configured database, HTTPS, and suitable storage for uploaded media.
 
+Never commit production secret keys, database files containing real user data, or private uploaded files to a public repository.
 
+## Project Purpose
+
+This project demonstrates practical skills in Django development, database modelling, authentication, access control, administrative workflows, automated testing, and user-interface design.

@@ -1,0 +1,221 @@
+
+{% extends "admin/base.html" %}
+
+{% block title %}Murang’a County | Administration{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">
+        MURANG’A COUNTY
+        <span class="county-admin-subtitle">PUBLIC SERVICE ADMINISTRATION</span>
+    </a>
+</div>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    :root {
+        --county-green: #176447;
+        --county-green-dark: #104b35;
+        --county-gold: #c79a35;
+        --county-background: #f4f7f5;
+        --county-text: #25332c;
+        --county-border: #dce5df;
+    }
+
+    body,
+    #container {
+        background: var(--county-background);
+        color: var(--county-text);
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    #header {
+        background: var(--county-green);
+        color: #fff;
+        padding: 16px 24px;
+        border-bottom: 4px solid var(--county-gold);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    #site-name {
+        margin: 0;
+        font-size: 19px;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }
+
+    #site-name a,
+    #site-name a:link,
+    #site-name a:visited {
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .county-admin-subtitle {
+        display: block;
+        margin-top: 5px;
+        color: #e9d7a7;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.5px;
+    }
+
+    #user-tools {
+        color: #fff;
+        font-size: 13px;
+        line-height: 1.8;
+    }
+
+    #user-tools a {
+        color: #fff;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    #content {
+        padding: 28px 30px;
+    }
+
+    #content h1 {
+        color: var(--county-green-dark);
+        font-size: 26px;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    #content h2,
+    #content h3 {
+        color: var(--county-green-dark);
+    }
+
+    a:link,
+    a:visited {
+        color: var(--county-green);
+    }
+
+    a:hover {
+        color: var(--county-green-dark);
+    }
+
+    .module,
+    .inline-group,
+    #changelist,
+    .submit-row {
+        border: 1px solid var(--county-border);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 7px rgba(20, 50, 35, 0.04);
+    }
+
+    .module h2,
+    .module caption,
+    .inline-group h2 {
+        background: var(--county-green);
+        color: #fff;
+        padding: 12px 15px;
+    }
+
+    .module caption a,
+    .module h2 a,
+    .module caption a:link,
+    .module h2 a:link {
+        color: #fff;
+    }
+
+    .button,
+    input[type="submit"],
+    input[type="button"],
+    .submit-row input,
+    a.button {
+        background: var(--county-green);
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 9px 14px;
+        font-weight: 600;
+    }
+
+    .button:hover,
+    input[type="submit"]:hover,
+    input[type="button"]:hover,
+    .submit-row input:hover,
+    a.button:hover {
+        background: var(--county-green-dark);
+        color: #fff;
+    }
+
+    .object-tools a {
+        background: var(--county-green);
+        border-radius: 5px;
+    }
+
+    .object-tools a:hover {
+        background: var(--county-green-dark);
+    }
+
+    #changelist-filter {
+        border-left: 1px solid var(--county-border);
+        background: #fff;
+    }
+
+    #changelist-filter h2 {
+        background: var(--county-green);
+        color: #fff;
+        padding: 12px;
+    }
+
+    #changelist-filter li.selected a {
+        color: var(--county-green-dark);
+        font-weight: 700;
+    }
+
+    table thead th {
+        background: #eaf1ec;
+        color: var(--county-text);
+    }
+
+    tr:nth-child(even) {
+        background-color: #f8faf8;
+    }
+
+    input,
+    select,
+    textarea {
+        max-width: 100%;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        border-color: var(--county-green);
+        outline-color: var(--county-green);
+    }
+
+    #footer {
+        padding: 18px 24px;
+        color: #52645a;
+    }
+
+    @media (max-width: 767px) {
+        #header {
+            padding: 14px 16px;
+        }
+
+        #content {
+            padding: 18px 12px;
+        }
+
+        #content h1 {
+            font-size: 22px;
+        }
+
+        #user-tools {
+            margin-top: 12px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
