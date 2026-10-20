@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Citizen Registration | Murang'a County</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7f5;
+            color: #1d2939;
+        }
+
+        .topbar {
+            padding: 12px 6%;
+            background: #104b32;
+            color: white;
+            font-size: 13px;
+        }
+
+        .layout {
+            width: 92%;
+            max-width: 1050px;
+            min-height: calc(100vh - 45px);
+            margin: 0 auto;
+            padding: 55px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .intro h1 {
+            font-size: clamp(30px, 4vw, 43px);
+            line-height: 1.2;
+            margin: 18px 0;
+        }
+
+        .intro p {
+            color: #667085;
+            line-height: 1.8;
+        }
+
+        .brand-mark {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: #176b45;
+            color: white;
+            font-weight: 800;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e4e9e6;
+            border-radius: 14px;
+            padding: 32px;
+            box-shadow: 0 12px 35px rgba(16, 75, 50, 0.06);
+        }
+
+        .card h2 {
+            margin: 0 0 8px;
+        }
+
+        .muted {
+            color: #667085;
+            font-size: 14px;
+        }
+
+        .field {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 650;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d0d5dd;
+            border-radius: 7px;
+            font: inherit;
+        }
+
+        input:focus {
+            outline: 2px solid #b8dfc8;
+            border-color: #176b45;
+        }
+
+        .help {
+            color: #667085;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .errorlist {
+            color: #b42318;
+            font-size: 13px;
+            padding-left: 20px;
+        }
+
+        .button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 24px;
+            border: 0;
+            border-radius: 7px;
+            background: #176b45;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #104b32;
+        }
+
+        .footer-links {
+            text-align: center;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #176b45;
+            font-weight: 650;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 760px) {
+            .layout {
+                grid-template-columns: 1fr;
+                padding: 30px 0;
+            }
+
+            .intro h1 {
+                font-size: 32px;
+            }
+
+            .card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        MURANG'A COUNTY GOVERNMENT | PUBLIC SERVICE ACCESS PORTAL
+    </header>
+
+    <main class="layout">
+        <section class="intro">
+            <div class="brand-mark">MC</div>
+            <h1>Create your citizen account.</h1>
+            <p>
+                Register to submit public service concerns, keep track of
+                your requests, and follow their progress in one place.
+            </p>
+            <p>
+                <a href="/">← Return to the homepage</a>
+            </p>
+        </section>
+
+        <section class="card">
+            <h2>Citizen registration</h2>
+            <p class="muted">Enter your details to create an account.</p>
+
+            <form method="post">
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    {{ form.non_field_errors }}
+                {% endif %}
+
+                {% for field in form %}
+                    <div class="field">
+                        <label for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="help">{{ field.help_text }}</div>
+                        {% endif %}
+
+                        {% for error in field.errors %}
+                            <div class="errorlist">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <button class="button" type="submit">
+                    Create account
+                </button>
+            </form>
+
+            <div class="footer-links">
+                Already registered?
+                <a href="{% url 'login' %}">Sign in</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

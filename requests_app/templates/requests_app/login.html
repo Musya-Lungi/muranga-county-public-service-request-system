@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | Murang'a County Service Portal</title>
+    <style>
+        :root {
+            --green: #176b43;
+            --dark-green: #104b30;
+            --gold: #d6a52c;
+            --background: #f4f7f5;
+            --text: #24332b;
+            --muted: #68766e;
+            --border: #dce5df;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+            background: var(--background);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 36px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            box-shadow: 0 12px 35px rgba(20, 60, 38, 0.08);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-mark {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            margin: 0 auto 14px;
+            background: var(--green);
+            color: white;
+            border-bottom: 4px solid var(--gold);
+            border-radius: 12px;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 20px;
+            color: var(--dark-green);
+        }
+
+        .brand p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        h2 {
+            margin: 0 0 8px;
+            font-size: 24px;
+        }
+
+        .intro {
+            margin: 0 0 24px;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid rgba(23, 107, 67, 0.18);
+            border-color: var(--green);
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 6px;
+            border: none;
+            border-radius: 8px;
+            background: var(--green);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--dark-green);
+        }
+
+        .error {
+            margin-bottom: 16px;
+            padding: 11px 12px;
+            border-radius: 7px;
+            background: #fff0ef;
+            color: #a32922;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: var(--green);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .security-note {
+            margin-top: 24px;
+            padding-top: 17px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 26px 21px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="login-card">
+        <header class="brand">
+            <div class="brand-mark">M</div>
+            <h1>MURANG'A COUNTY GOVERNMENT</h1>
+            <p>Public Service Access Portal</p>
+        </header>
+
+        <h2>Welcome back</h2>
+        <p class="intro">
+            Sign in to submit service requests and follow their progress.
+        </p>
+
+        {% if form.errors %}
+            <div class="error" role="alert">
+                Your username or password was incorrect. Please try again.
+            </div>
+        {% endif %}
+
+        {% if next %}
+            <div class="error" role="status">
+                Please sign in to access the requested page.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="field">
+                <label for="id_username">Username</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    autocomplete="username"
+                    required
+                    autofocus
+                >
+            </div>
+
+            <div class="field">
+                <label for="id_password">Password</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+
+            <button type="submit">Sign in</button>
+        </form>
+
+        <div class="footer">
+            Don't have an account?
+            <a href="{% url 'register' %}">Create one</a>
+        </div>
+
+        <div class="security-note">
+            Protect your account by keeping your password private.
+            <br>
+            Murang'a County Public Service Access Portal
+        </div>
+    </main>
+</body>
+</html>

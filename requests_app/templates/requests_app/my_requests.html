@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Requests | Murang'a County</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 32px 16px;
+            font-family: Arial, sans-serif;
+            background: #f4f7f4;
+            color: #26352b;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            color: #176b3a;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #627067;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 11px 16px;
+            border-radius: 7px;
+            background: #176b3a;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .button:hover {
+            background: #10542c;
+        }
+
+        .request-card {
+            margin-bottom: 16px;
+            padding: 22px;
+            background: white;
+            border: 1px solid #e0e8e1;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 19px;
+        }
+
+        .category {
+            margin: 0 0 12px;
+            color: #627067;
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            background: #fff3d6;
+            color: #805500;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status.in-progress {
+            background: #e3efff;
+            color: #174ea6;
+        }
+
+        .status.resolved {
+            background: #dff5e5;
+            color: #176b3a;
+        }
+
+        .description {
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .details {
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid #e8eee9;
+            color: #627067;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .empty {
+            padding: 40px 20px;
+            background: white;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .empty h2 {
+            color: #176b3a;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 22px 12px;
+            }
+
+            .request-card {
+                padding: 17px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <div>
+                <h1>My Service Requests</h1>
+                <p class="subtitle">
+                    Welcome, {{ request.user.username }}.
+                    Track the progress of your submitted issues.
+                </p>
+            </div>
+
+            <a class="button" href="{% url 'submit_request' %}">
+                + Submit Request
+            </a>
+        </header>
+
+        {% if service_requests %}
+            {% for service_request in service_requests %}
+                <article class="request-card">
+                    <div class="request-top">
+                        <div>
+                            <h2>{{ service_request.title }}</h2>
+                            <p class="category">
+                                {{ service_request.get_category_display }}
+                            </p>
+                        </div>
+
+                        <span class="status{% if service_request.status == 'IN_PROGRESS' %} in-progress{% elif service_request.status == 'RESOLVED' %} resolved{% endif %}">
+                            {{ service_request.get_status_display }}
+                        </span>
+                    </div>
+
+                    <p class="description">
+                        {{ service_request.description|linebreaksbr }}
+                    </p>
+
+                    <div class="details">
+                        <div>
+                            <strong>Reference:</strong>
+                            {{ service_request.reference_number }}
+                        </div>
+                        <div>
+                            <strong>Location:</strong>
+                            {{ service_request.location }}
+                        </div>
+                        <div>
+                            <strong>Submitted:</strong>
+                            {{ service_request.created_at|date:"d M Y, H:i" }}
+                        </div>
+
+                        {% if service_request.resolved_at %}
+                            <div>
+                                <strong>Resolved:</strong>
+                                {{ service_request.resolved_at|date:"d M Y, H:i" }}
+                            </div>
+                        {% endif %}
+
+                        {% if service_request.image %}
+                            <div>
+                                <strong>Attachment:</strong>
+                                <a href="{{ service_request.image.url }}" target="_blank" rel="noopener noreferrer">
+                                    View uploaded image
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </article>
+            {% endfor %}
+        {% else %}
+            <section class="empty">
+                <h2>No requests yet</h2>
+                <p>You haven't submitted a service request.</p>
+                <a class="button" href="{% url 'submit_request' %}">
+                    Submit Your First Request
+                </a>
+            </section>
+        {% endif %}
+
+        <p>
+            <a href="{% url 'home' %}">← Back to homepage</a>
+        </p>
+    </main>
+</body>
+</html>
